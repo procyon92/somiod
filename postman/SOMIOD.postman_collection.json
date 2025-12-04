@@ -1,0 +1,403 @@
+{
+	"info": {
+		"_postman_id": "b43c959d-6e3d-420d-b6f5-d1038c8e22b4",
+		"name": "SOMIOD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48943002",
+		"_collection_link": "https://andreclerigo-947538.postman.co/workspace/Andr%C3%A9-Cl%C3%A9rigo's-Workspace~f20cd7f8-beda-47a6-8f5f-cf31603f59bb/collection/48943002-b43c959d-6e3d-420d-b6f5-d1038c8e22b4?action=share&source=collection_link&creator=48943002"
+	},
+	"item": [
+		{
+			"name": "Application",
+			"item": [
+				{
+					"name": "Create APP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"res_type\": \"application\",\r\n    \"resource_name\": \"MinhaPrimeiraApp\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Application",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update App Name",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"res_type\": \"application\",\r\n    \"resource_name\": \"AppRenomeada\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete App",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/AppRenomeada",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"AppRenomeada"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Container",
+			"item": [
+				{
+					"name": "Create Container",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"res_type\": \"container\",\r\n    \"resource_name\": \"DadosSensores\"\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Container",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Update Container",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"res_type\": \"container\",\r\n    \"resource_name\": \"SensoresV2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp",
+								"DadosSensores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Container",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Content Instance",
+			"item": [
+				{
+					"name": "Create Content Instance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"res_type\": \"content-instance\",\r\n    \"content\": \"25 graus\",\r\n    \"content_type\": \"text/plain\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp",
+								"DadosSensores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Content Instance",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/{{res_name}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp",
+								"DadosSensores",
+								"{{res_name}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Content Instance",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/{{res_name}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp",
+								"DadosSensores",
+								"{{res_name}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscription",
+			"item": [
+				{
+					"name": "Create Subscription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"res_type\": \"subscription\",\r\n    \"resource_name\": \"SubMinhaApp\",\r\n    \"evt\": \"1\",\r\n    \"endpoint\": \"http://localhost:5000/api/notificacoes\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/subs",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp",
+								"DadosSensores",
+								"subs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Subscription",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/subs/SubMinhaApp",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp",
+								"DadosSensores",
+								"subs",
+								"SubMinhaApp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Subscription",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/subs/SubMinhaApp",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"MinhaPrimeiraApp",
+								"DadosSensores",
+								"subs",
+								"SubMinhaApp"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "somiod discovery",
+			"item": [
+				{
+					"name": "Get All Apps",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "somiod-discovery",
+								"value": "application",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Containers",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Content Instances",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Subscriptions",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": ""
+		}
+	]
+}
