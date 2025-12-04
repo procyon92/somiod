@@ -469,6 +469,11 @@ namespace SOMIOD.Controllers
                     return InternalServerError(ex);
                 }
 
+                GetSubscriptions(conn, containerId, "1").ForEach(sub =>
+                {
+                    // Notify subscription endpoint
+                });
+
                 MqttHelper.Publish($"api/somiod/{containerName}", $"ContentInstance created: {ci.resource_name}");
             }
             return Ok(ci);
@@ -518,6 +523,19 @@ namespace SOMIOD.Controllers
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+                conn.Open();
+                string sqlGetContId = @"SELECT C.Id FROM Containers C 
+                                        INNER JOIN Applications A ON C.ParentAppId = A.Id 
+                                        WHERE A.Name = @appName AND C.Name = @contName";
+                SqlCommand cmdGetId = new SqlCommand(sqlGetContId, conn);
+                cmdGetId.Parameters.AddWithValue("@appName", appName);
+                cmdGetId.Parameters.AddWithValue("@contName", containerName);
+
+                object result = cmdGetId.ExecuteScalar();
+                if (result == null) return NotFound();
+
+                int containerId = (int)result;
+
                 string sql = @"DELETE CI FROM ContentInstances CI
                                INNER JOIN Containers C ON CI.ParentContainerId = C.Id
                                INNER JOIN Applications A ON C.ParentAppId = A.Id
@@ -526,8 +544,12 @@ namespace SOMIOD.Controllers
                 cmd.Parameters.AddWithValue("@appName", appName);
                 cmd.Parameters.AddWithValue("@contName", containerName);
                 cmd.Parameters.AddWithValue("@dataName", recordName);
-                conn.Open();
                 if (cmd.ExecuteNonQuery() == 0) return NotFound();
+
+                GetSubscriptions(conn, containerId, "2").ForEach(sub =>
+                {
+                    // Notify subscription endpoint
+                });
 
                 MqttHelper.Publish($"api/somiod/{containerName}", $"ContentInstance deleted: {recordName}");
             }
@@ -649,6 +671,33 @@ namespace SOMIOD.Controllers
             return Ok();
         }
 
+        private List<SubscriptionModel> GetSubscriptions(SqlConnection conn, int containerId, string evt)
+        {
+            var list = new List<SubscriptionModel>();
+
+            string sqlSubs = @"SELECT Id, Name, Event, Endpoint 
+                       FROM Subscriptions 
+                       WHERE ParentContainerId = @id AND Event = @evt";
+
+            SqlCommand cmd = new SqlCommand(sqlSubs, conn);
+            cmd.Parameters.AddWithValue("@id", containerId);
+            cmd.Parameters.AddWithValue("@evt", evt);
+
+            SqlDataReader r = cmd.ExecuteReader();
+            while (r.Read())
+            {
+                list.Add(new SubscriptionModel
+                {
+                    id = (int)r["Id"],
+                    resource_name = (string)r["Name"],
+                    evt = (string)r["Event"],
+                    endpoint = (string)r["Endpoint"],
+                    res_type = "subscription"
+                });
+            }
+            r.Close();
+            return list;
+        }
         #endregion
     }
 }
