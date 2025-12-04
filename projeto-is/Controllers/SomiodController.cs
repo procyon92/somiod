@@ -468,6 +468,8 @@ namespace SOMIOD.Controllers
                     if (ex.Number == 2627) return Conflict();
                     return InternalServerError(ex);
                 }
+
+                MqttHelper.Publish($"api/somiod/{containerName}", $"ContentInstance created: {ci.resource_name}");
             }
             return Ok(ci);
         }
@@ -526,6 +528,8 @@ namespace SOMIOD.Controllers
                 cmd.Parameters.AddWithValue("@dataName", recordName);
                 conn.Open();
                 if (cmd.ExecuteNonQuery() == 0) return NotFound();
+
+                MqttHelper.Publish($"api/somiod/{containerName}", $"ContentInstance deleted: {recordName}");
             }
             return Ok();
         }
