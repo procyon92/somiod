@@ -11,7 +11,13 @@ namespace projeto_is
     {
         protected void Application_Start()
         {
+            MqttHelper.Connect();
             GlobalConfiguration.Configure(WebApiConfig.Register);
+        }
+
+        protected void Application_End()
+        {
+            MqttHelper.Disconnect();
         }
     }
 }
