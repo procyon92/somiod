@@ -69,20 +69,30 @@ namespace SOMIOD.Controllers
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = "INSERT INTO Applications (Name, CreationDate) VALUES (@name, @date)";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@name", app.resource_name);
-                cmd.Parameters.AddWithValue("@date", DateTime.Now);
+                conn.Open();
 
-                try
+                while (true)
                 {
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                catch (SqlException ex)
-                {
-                    if (ex.Number == 2627) return Conflict(); // Nome duplicado
-                    return InternalServerError(ex);
+                    string sql = "INSERT INTO Applications (Name, CreationDate) VALUES (@name, @date)";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@name", app.resource_name);
+                    cmd.Parameters.AddWithValue("@date", DateTime.Now);
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        break;
+                    }
+                    catch (SqlException ex)
+                    {
+                        if (ex.Number == 2627)
+                        {
+                            app.resource_name = "App_" + app.resource_name + "_" + Guid.NewGuid().ToString().Substring(0, 8);
+                            continue;
+                        }
+
+                        return InternalServerError(ex);
+                    }
                 }
             }
             return Ok(app);
