@@ -21,9 +21,9 @@ public class MqttHelper
         client.Connect(clientId);
 
         if (client.IsConnected)
-            Console.WriteLine("[MQTT] Connected to broker.");
+            System.Diagnostics.Debug.WriteLine("[MQTT] Connected to broker.");
         else
-            Console.WriteLine("[MQTT] Failed to connect to broker.");
+            System.Diagnostics.Debug.WriteLine("[MQTT] Failed to connect to broker.");
     }
 
     public static void Publish(string topic, string payload)
@@ -33,13 +33,13 @@ public class MqttHelper
 
         client.Publish(topic, Encoding.UTF8.GetBytes(payload),
                        MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, false);
-        Console.WriteLine($"[MQTT] Published '{payload}' to '{topic}'");
+        System.Diagnostics.Debug.WriteLine($"[MQTT] Published '{payload}' to '{topic}'");
     }
 
     private static void OnMessageReceived(object sender, MqttMsgPublishEventArgs e)
     {
         string msg = Encoding.UTF8.GetString(e.Message);
-        Console.WriteLine($"[MQTT] Message received: {msg} on {e.Topic}");
+        System.Diagnostics.Debug.WriteLine($"[MQTT] Message received: {msg} on {e.Topic}");
     }
 
     public static void Disconnect()
@@ -47,7 +47,7 @@ public class MqttHelper
         if (client != null && client.IsConnected)
         {
             client.Disconnect();
-            Console.WriteLine("[MQTT] Disconnected.");
+            System.Diagnostics.Debug.WriteLine("[MQTT] Disconnected.");
         }
     }
 }
