@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace SOMIOD.Controllers
@@ -469,9 +470,32 @@ namespace SOMIOD.Controllers
                     return InternalServerError(ex);
                 }
 
-                GetSubscriptions(conn, containerId, "1").ForEach(sub =>
+                var subscriptions = GetSubscriptions(conn, containerId, "1");
+
+                // Starts sending notifications in the background without blocking the API response
+                _ = Task.Run(async () =>
                 {
-                    // Notify subscription endpoint
+                    foreach (var sub in subscriptions)
+                    {
+                        var notification = new NotificationModel
+                        {
+                            evt = "creation",
+                            resource_name = ci.resource_name,
+                            container = containerName,
+                            timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            content = ci.content,
+                            content_type = ci.content_type
+                        };
+
+                        try
+                        {
+                            await HttpHelper.SendNotificationAsync(notification, sub.endpoint);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Error sending notification: {ex.Message}");
+                        }
+                    }
                 });
 
                 MqttHelper.Publish($"api/somiod/{containerName}", $"ContentInstance created: {ci.resource_name}");
@@ -546,9 +570,32 @@ namespace SOMIOD.Controllers
                 cmd.Parameters.AddWithValue("@dataName", recordName);
                 if (cmd.ExecuteNonQuery() == 0) return NotFound();
 
-                GetSubscriptions(conn, containerId, "2").ForEach(sub =>
+                var subscriptions = GetSubscriptions(conn, containerId, "2");
+
+                // Starts sending notifications in the background
+                _ = Task.Run(async () =>
                 {
-                    // Notify subscription endpoint
+                    foreach (var sub in subscriptions)
+                    {
+                        var notification = new NotificationModel
+                        {
+                            evt = "deletion",
+                            resource_name = recordName,
+                            container = containerName,
+                            timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            content = null,
+                            content_type = ""
+                        };
+
+                        try
+                        {
+                            await HttpHelper.SendNotificationAsync(notification, sub.endpoint);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Error sending delete notification: {ex.Message}");
+                        }
+                    }
                 });
 
                 MqttHelper.Publish($"api/somiod/{containerName}", $"ContentInstance deleted: {recordName}");
