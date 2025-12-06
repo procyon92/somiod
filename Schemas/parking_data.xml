@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<parking>
+  <spot>A1</spot>
+  <status>occupied</status>
+  <time>14:30:00</time>
+</parking>
