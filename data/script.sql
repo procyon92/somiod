@@ -40,3 +40,22 @@ CREATE TABLE Subscriptions (
     FOREIGN KEY (ParentContainerId) REFERENCES Containers(Id),
     UNIQUE(Name, ParentContainerId)
 );
+
+-- 5. DUMMY DATA (Cenário Smart Parking)
+
+-- Criar a Aplicação 'smart-parking'
+INSERT INTO Applications (Name, CreationDate) 
+VALUES ('smart-parking', GETDATE());
+
+-- Obter o ID da App (assumindo que é a primeira, ID=1, mas num script real pode variar)
+-- Criar o Container 'piso-01' (onde estão os sensores)
+INSERT INTO Containers (Name, CreationDate, ParentAppId)
+VALUES ('piso-01', GETDATE(), 1);
+
+-- Inserir um dado de teste (Ex: Lugar A1 ocupado)
+INSERT INTO ContentInstances (Name, CreationDate, ContentType, Content, ParentContainerId)
+VALUES ('record-init', GETDATE(), 'application/xml', '<parking><spot>A1</spot><status>occupied</status></parking>', 1);
+
+-- Inserir a Subscrição do Painel (App B)
+INSERT INTO Subscriptions (Name, CreationDate, Event, Endpoint, ParentContainerId)
+VALUES ('sub-painel', GETDATE(), '1', '127.0.0.1', 1);

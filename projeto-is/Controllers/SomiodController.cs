@@ -1,4 +1,5 @@
-﻿using SOMIOD.Models;
+﻿using SOMIOD;
+using SOMIOD.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -498,7 +499,7 @@ namespace SOMIOD.Controllers
                     }
                 });
 
-                MqttHelper.Publish($"api/somiod/{containerName}", $"ContentInstance created: {ci.resource_name}");
+                MqttHelper.Publish($"api/somiod/{appName}/{containerName}", $"ContentInstance created: {ci.resource_name}");
             }
             return Ok(ci);
         }
@@ -598,7 +599,7 @@ namespace SOMIOD.Controllers
                     }
                 });
 
-                MqttHelper.Publish($"api/somiod/{containerName}", $"ContentInstance deleted: {recordName}");
+                MqttHelper.Publish($"api/somiod/{appName}/{containerName}", $"ContentInstance deleted: {recordName}");
             }
             return Ok();
         }
