@@ -58,6 +58,9 @@
     <Compile Include="ApplicationB.Designer.cs">
       <DependentUpon>ApplicationB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\ApplicationModel.cs" />
+    <Compile Include="Models\ContainerModel.cs" />
+    <Compile Include="Models\ContentInstance.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ApplicationB.resx">
@@ -85,6 +88,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\projeto-is\SOMIOD.csproj">
+      <Project>{1094b48f-97c7-41df-94c8-f5c700b87936}</Project>
+      <Name>SOMIOD</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
