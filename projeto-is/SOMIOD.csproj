@@ -96,13 +96,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="HttpHelper.cs" />
     <Compile Include="Models\ApplicationModel.cs" />
     <Compile Include="Models\ContainerModel.cs" />
     <Compile Include="Models\ContentInstance.cs" />
     <Compile Include="Models\NotificationModel.cs" />
     <Compile Include="Models\SubscriptionModel.cs" />
-    <Compile Include="MqttHelper.cs" />
+    <Compile Include="Utils\HttpHelper.cs" />
+    <Compile Include="Utils\MqttHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
