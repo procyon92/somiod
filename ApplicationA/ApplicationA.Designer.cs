@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.groupBox_Config = new System.Windows.Forms.GroupBox();
-            this.txtApiUrl = new System.Windows.Forms.TextBox();
             this.btnConnect = new System.Windows.Forms.Button();
+            this.txtApiUrl = new System.Windows.Forms.TextBox();
             this.groupBox_Sensor = new System.Windows.Forms.GroupBox();
-            this.btnEntrada = new System.Windows.Forms.Button();
-            this.btnSaida = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
+            this.btnSaida = new System.Windows.Forms.Button();
+            this.btnEntrada = new System.Windows.Forms.Button();
             this.groupBox_Config.SuspendLayout();
             this.groupBox_Sensor.SuspendLayout();
             this.SuspendLayout();
@@ -50,15 +50,6 @@
             this.groupBox_Config.TabStop = false;
             this.groupBox_Config.Text = "Configuração:";
             // 
-            // txtApiUrl
-            // 
-            this.txtApiUrl.Location = new System.Drawing.Point(7, 36);
-            this.txtApiUrl.Name = "txtApiUrl";
-            this.txtApiUrl.Size = new System.Drawing.Size(318, 26);
-            this.txtApiUrl.TabIndex = 0;
-            this.txtApiUrl.Text = "http://localhost:PORT/api/somiod/";
-            this.txtApiUrl.TextChanged += new System.EventHandler(this.txtApiUrl_TextChanged);
-            // 
             // btnConnect
             // 
             this.btnConnect.Location = new System.Drawing.Point(358, 36);
@@ -67,6 +58,16 @@
             this.btnConnect.TabIndex = 1;
             this.btnConnect.Text = "Ligar Sensor";
             this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
+            // txtApiUrl
+            // 
+            this.txtApiUrl.Location = new System.Drawing.Point(7, 36);
+            this.txtApiUrl.Name = "txtApiUrl";
+            this.txtApiUrl.Size = new System.Drawing.Size(318, 26);
+            this.txtApiUrl.TabIndex = 0;
+            this.txtApiUrl.Text = "http://localhost:51364/api/somiod/";
+            this.txtApiUrl.TextChanged += new System.EventHandler(this.txtApiUrl_TextChanged);
             // 
             // groupBox_Sensor
             // 
@@ -80,14 +81,14 @@
             this.groupBox_Sensor.TabStop = false;
             this.groupBox_Sensor.Text = "GroupBox (Sensor Lugar A1):";
             // 
-            // btnEntrada
+            // lblStatus
             // 
-            this.btnEntrada.Location = new System.Drawing.Point(7, 26);
-            this.btnEntrada.Name = "btnEntrada";
-            this.btnEntrada.Size = new System.Drawing.Size(167, 29);
-            this.btnEntrada.TabIndex = 0;
-            this.btnEntrada.Text = "Ocupar Lugar";
-            this.btnEntrada.UseVisualStyleBackColor = true;
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(358, 34);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(166, 20);
+            this.lblStatus.TabIndex = 2;
+            this.lblStatus.Text = "Status: Desconhecido";
             // 
             // btnSaida
             // 
@@ -97,15 +98,17 @@
             this.btnSaida.TabIndex = 1;
             this.btnSaida.Text = "Liberar Lugar";
             this.btnSaida.UseVisualStyleBackColor = true;
+            this.btnSaida.Click += new System.EventHandler(this.btnSair_Click);
             // 
-            // lblStatus
+            // btnEntrada
             // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(358, 34);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(166, 20);
-            this.lblStatus.TabIndex = 2;
-            this.lblStatus.Text = "Status: Desconhecido";
+            this.btnEntrada.Location = new System.Drawing.Point(7, 26);
+            this.btnEntrada.Name = "btnEntrada";
+            this.btnEntrada.Size = new System.Drawing.Size(167, 29);
+            this.btnEntrada.TabIndex = 0;
+            this.btnEntrada.Text = "Ocupar Lugar";
+            this.btnEntrada.UseVisualStyleBackColor = true;
+            this.btnEntrada.Click += new System.EventHandler(this.btnEntrar_Click);
             // 
             // ApplicationA
             // 
@@ -116,6 +119,7 @@
             this.Controls.Add(this.groupBox_Config);
             this.Name = "ApplicationA";
             this.Text = "Producer Application";
+            this.Load += new System.EventHandler(this.ApplicationA_Load);
             this.groupBox_Config.ResumeLayout(false);
             this.groupBox_Config.PerformLayout();
             this.groupBox_Sensor.ResumeLayout(false);
