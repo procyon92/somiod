@@ -4,9 +4,10 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 using System.Xml;
+using System.Xml.Serialization;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
@@ -48,31 +49,46 @@ namespace ApplicationB
             {
                 try
                 {
-                    // AQUI SIM: Escrevemos no Log porque é uma mensagem recebida
                     string jsonMsg = Encoding.UTF8.GetString(e.Message);
-                    txtLog.AppendText($"[{DateTime.Now:HH:mm:ss}] [RX] JSON: {jsonMsg}\r\n");
+                    txtLog.AppendText($"[{DateTime.Now:HH:mm:ss}] [RX] JSON recebido.\r\n"); // Encurtei para não encher o log
 
-                    // A. Deserializar para o Modelo
+                    // A. Deserializar o JSON para Objeto C#
                     NotificationModel notif = JsonConvert.DeserializeObject<NotificationModel>(jsonMsg);
 
-                    if (notif == null)
+                    if (notif == null || string.IsNullOrEmpty(notif.content))
                     {
-                        txtLog.AppendText("[ERRO] JSON vazio ou inválido.\r\n");
+                        txtLog.AppendText("[ERRO] JSON vazio ou sem conteúdo.\r\n");
                         return;
                     }
 
-                    // B. Serializar para XML
-                    string fileName = $"notif_{DateTime.Now.Ticks}.xml";
-                    XmlSerializer serializer = new XmlSerializer(typeof(NotificationModel));
+                    // =================================================================
+                    // B. MUDANÇA CRÍTICA: GRAVAR APENAS O CONTEÚDO XML (<parking>...)
+                    // =================================================================
+                    // Formata a data para Ano-Mes-Dia_Hora-Minuto-Segundo
+                    string dataFormatada = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                    string fileName = $"parking_{dataFormatada}.xml";
 
-                    using (StreamWriter writer = new StreamWriter(fileName))
+                    try
                     {
-                        serializer.Serialize(writer, notif);
+                        // O 'notif.content' já contém a string "<parking><spot>...</parking>"
+                        // Vamos carregar isso como um documento XML limpo
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(notif.content);
+
+                        // Guardar no disco (O ficheiro vai começar com <parking>)
+                        doc.Save(fileName);
+                    }
+                    catch (Exception exXml)
+                    {
+                        txtLog.AppendText($"[ERRO] O conteúdo não é XML válido: {exXml.Message}\r\n");
+                        return; // Se não é XML, não vale a pena validar
                     }
 
                     // C. Validar com XSD
-                    // O ficheiro "notification.xsd" tem de estar na pasta bin/Debug junto ao .exe
-                    if (ValidateXml(fileName, "notification.xsd"))
+                    // O caminho relativo para a pasta Schemas (conforme a tua imagem)
+                    string caminhoXsd = @"..\..\..\Schemas\parking.xsd";
+
+                    if (ValidateXml(fileName, caminhoXsd))
                     {
                         txtLog.AppendText($" -> XML guardado e VALIDADO: {fileName}\r\n");
                     }
@@ -214,29 +230,48 @@ namespace ApplicationB
         {
             try
             {
+                // PASSO 1: APAGAR O REGISTO NA API (Obrigatório pelo Projeto)
                 string endpointUrl = $"{apiUrl}/{appName}/{containerName}/subs/{mySubscriptionName}";
+
                 var response = await httpClient.DeleteAsync(endpointUrl);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Subscrição removida da API!");
-                    btnSubscribe.Enabled = true;
-                    btnUnsubscribe.Enabled = false;
+                    MessageBox.Show("Subscrição removida da Base de Dados com sucesso!");
                 }
                 else
                 {
-                    MessageBox.Show("Erro ao remover (ou já não existe na BD).");
-                    // Se já não existe, assumimos que está removida
-                    btnSubscribe.Enabled = true;
-                    btnUnsubscribe.Enabled = false;
+                    // Se a API der erro (ex: 404 Not Found), não faz mal.
+                    // O importante é garantir que a tua App para de ouvir.
+                    string erro = await response.Content.ReadAsStringAsync();
+                    // Opcional: MessageBox.Show($"Aviso API: {response.StatusCode}");
                 }
 
-                // Opcional: Parar MQTT local
-                // mClient.Unsubscribe(new string[] { topic });
+                // PASSO 2: PARAR DE ESCUTAR O MQTT (Obrigatório para parar a UI)
+                if (mClient != null && mClient.IsConnected)
+                {
+                    // Diz ao Broker: "Não me mandes mais nada deste tópico"
+                    mClient.Unsubscribe(new string[] { topic });
+
+                    txtLog.AppendText($"[{DateTime.Now:HH:mm:ss}] [STOP] Subscrição cancelada. Não receberás mais notificações.\r\n");
+                    txtLog.AppendText("-------------------------------\r\n");
+                }
+
+                // PASSO 3: GERIR BOTÕES
+                // Como já não estamos subscritos, ativamos o botão para poder voltar a subscrever
+                btnSubscribe.Enabled = true;
+                btnUnsubscribe.Enabled = false;
+
+                // Opcional: Reativar o botão de Listen se quiseres permitir reconexão limpa
+                // btnListen.Enabled = true; 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro: " + ex.Message);
+                MessageBox.Show("Erro ao fazer Unsubscribe: " + ex.Message);
+
+                // Em caso de erro crítico, assumimos que a ligação caiu e deixamos tentar de novo
+                btnSubscribe.Enabled = true;
+                btnUnsubscribe.Enabled = false;
             }
         }
     }
