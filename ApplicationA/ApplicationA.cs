@@ -20,8 +20,16 @@ namespace ApplicationA
         public ApplicationA()
         {
             InitializeComponent();
-            // Define um porto por defeito (ajuste conforme o seu projeto API)
-            txtApiUrl.Text = "http://localhost:44301/api/somiod/";
+
+            // Configura o URL inicial
+            txtApiUrl.Text = "http://localhost:51364/api/somiod/";
+
+            // CORREÇÃO: Forçar os botões a começar DESATIVADOS
+            btnEntrada.Enabled = false;
+            btnSaida.Enabled = false;
+
+            // O botão de ligar deve começar ativo
+            btnConnect.Enabled = true;
         }
 
         // ========================================================
@@ -130,6 +138,11 @@ namespace ApplicationA
         // Função vazia apenas para corrigir o erro do Designer
         private void txtApiUrl_TextChanged(object sender, EventArgs e)
         {
+        }
+
+        private void ApplicationA_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
