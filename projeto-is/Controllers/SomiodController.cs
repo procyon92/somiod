@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace SOMIOD.Controllers
 {
@@ -473,21 +474,21 @@ namespace SOMIOD.Controllers
 
                 var subscriptions = GetSubscriptions(conn, containerId, "1");
 
+                var notification = new NotificationModel
+                {
+                    evt = "creation",
+                    resource_name = ci.resource_name,
+                    container = containerName,
+                    timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    content = ci.content,
+                    content_type = ci.content_type
+                };
+
                 // Starts sending notifications in the background without blocking the API response
                 _ = Task.Run(async () =>
                 {
                     foreach (var sub in subscriptions)
                     {
-                        var notification = new NotificationModel
-                        {
-                            evt = "creation",
-                            resource_name = ci.resource_name,
-                            container = containerName,
-                            timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            content = ci.content,
-                            content_type = ci.content_type
-                        };
-
                         try
                         {
                             await HttpHelper.SendNotificationAsync(notification, sub.endpoint);
@@ -499,7 +500,7 @@ namespace SOMIOD.Controllers
                     }
                 });
 
-                MqttHelper.Publish($"api/somiod/{appName}/{containerName}", $"ContentInstance created: {ci.resource_name}");
+                MqttHelper.Publish($"api/somiod/{appName}/{containerName}", JsonConvert.SerializeObject(notification));
             }
             return Ok(ci);
         }
@@ -573,21 +574,21 @@ namespace SOMIOD.Controllers
 
                 var subscriptions = GetSubscriptions(conn, containerId, "2");
 
+                var notification = new NotificationModel
+                {
+                    evt = "deletion",
+                    resource_name = recordName,
+                    container = containerName,
+                    timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    content = null,
+                    content_type = ""
+                };
+
                 // Starts sending notifications in the background
                 _ = Task.Run(async () =>
                 {
                     foreach (var sub in subscriptions)
                     {
-                        var notification = new NotificationModel
-                        {
-                            evt = "deletion",
-                            resource_name = recordName,
-                            container = containerName,
-                            timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            content = null,
-                            content_type = ""
-                        };
-
                         try
                         {
                             await HttpHelper.SendNotificationAsync(notification, sub.endpoint);
@@ -599,7 +600,7 @@ namespace SOMIOD.Controllers
                     }
                 });
 
-                MqttHelper.Publish($"api/somiod/{appName}/{containerName}", $"ContentInstance deleted: {recordName}");
+                MqttHelper.Publish($"api/somiod/{appName}/{containerName}", JsonConvert.SerializeObject(notification));
             }
             return Ok();
         }
