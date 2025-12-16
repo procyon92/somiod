@@ -22,7 +22,7 @@ namespace ApplicationA
             InitializeComponent();
 
             // Configura o URL inicial
-            txtApiUrl.Text = "http://localhost:51364/api/somiod/";
+            txtApiUrl.Text = "http://localhost:60000/api/somiod/";
 
             // CORREÇÃO: Forçar os botões a começar DESATIVADOS
             btnEntrada.Enabled = false;
