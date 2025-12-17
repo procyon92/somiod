@@ -1,6 +1,6 @@
 ﻿namespace ApplicationB
 {
-    partial class ApplicaionB
+    partial class ApplicationB
     {
         /// <summary>
         /// Required designer variable.
@@ -50,7 +50,7 @@
             this.txtApiUrl.Name = "txtApiUrl";
             this.txtApiUrl.Size = new System.Drawing.Size(256, 22);
             this.txtApiUrl.TabIndex = 0;
-            this.txtApiUrl.Text = "http://localhost:60000/api/somiod";
+            this.txtApiUrl.Text = "http://localhost:5000/api/somiod";
             // 
             // groupBox_Config
             // 
@@ -80,7 +80,7 @@
             this.btnListen.TabIndex = 7;
             this.btnListen.Text = "Ligar ao MQTT";
             this.btnListen.UseVisualStyleBackColor = false;
-            this.btnListen.Click += new System.EventHandler(this.btnListen_Click_1);
+            this.btnListen.Click += new System.EventHandler(this.btnListen_Click);
             // 
             // textBox2
             // 
@@ -142,7 +142,7 @@
             this.btnSubscribe.TabIndex = 3;
             this.btnSubscribe.Text = "Subscribe";
             this.btnSubscribe.UseVisualStyleBackColor = false;
-            this.btnSubscribe.Click += new System.EventHandler(this.btnSubscribe_Click_1);
+            this.btnSubscribe.Click += new System.EventHandler(this.btnSubscribe_Click);
             // 
             // btnUnsubscribe
             // 
@@ -153,7 +153,8 @@
             this.btnUnsubscribe.TabIndex = 4;
             this.btnUnsubscribe.Text = "Unsubscribe";
             this.btnUnsubscribe.UseVisualStyleBackColor = false;
-            this.btnUnsubscribe.Click += new System.EventHandler(this.btnUnsubscribe_Click_1);
+            // CORRIGIDO: Removido o _1
+            this.btnUnsubscribe.Click += new System.EventHandler(this.btnUnsubscribe_Click);
             // 
             // txtLog
             // 
@@ -172,7 +173,7 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Received Messages";
             // 
-            // ApplicaionB
+            // ApplicationB
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -182,9 +183,9 @@
             this.Controls.Add(this.btnUnsubscribe);
             this.Controls.Add(this.btnSubscribe);
             this.Controls.Add(this.groupBox_Config);
-            this.Name = "ApplicaionB";
+            this.Name = "ApplicationB";
             this.Text = "ApplicationB";
-            this.Load += new System.EventHandler(this.ApplicaionB_Load);
+            this.Load += new System.EventHandler(this.ApplicationB_Load);
             this.groupBox_Config.ResumeLayout(false);
             this.groupBox_Config.PerformLayout();
             this.ResumeLayout(false);
@@ -209,4 +210,3 @@
         private System.Windows.Forms.Label label1;
     }
 }
-

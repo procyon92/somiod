@@ -1,22 +1,29 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace ApplicationA.Models
 {
     public class ApplicationModel
     {
-        public int id { get; set; } // Usado internamente, não precisa de ser enviado pelo utilizador
+        // O 'id' deve ser público para o teu código aceder, 
+        // mas deve ter [JsonIgnore] para não ser enviado na API.
+        [JsonIgnore]
+        public int Id { get; set; }
 
-        // O enunciado exige estes nomes exatos no JSON:
-        public string res_type { get; set; }
-        public string resource_name { get; set; }
-        public DateTime creation_datetime { get; set; }
+        // Usamos [JsonProperty] para mapear a propriedade C# para o nome JSON com hífen exigido.
+        [JsonProperty("res-type")]
+        public string ResType { get; set; }
 
-        // Construtor para definir valores por defeito
+        [JsonProperty("resource-name")]
+        public string ResourceName { get; set; }
+
+        [JsonProperty("creation-datetime")]
+        public DateTime CreationDateTime { get; set; }
+
         public ApplicationModel()
         {
-            res_type = "application";
-            creation_datetime = DateTime.Now;
+            ResType = "application";
+            CreationDateTime = DateTime.Now;
         }
     }
 }

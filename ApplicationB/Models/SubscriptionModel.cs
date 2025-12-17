@@ -1,41 +1,41 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace SOMIOD.Models
+namespace ApplicationB.Models
 {
-    public class ContentInstanceModel
+    public class SubscriptionModel
     {
-        // Ocultar ID interno 
+        // Ocultar dados internos
         [JsonIgnore]
         public int Id { get; set; }
 
-        // Mapeamento para "res-type"
+        // Mapeamento "res-type"
         [JsonProperty("res-type")]
         public string ResType { get; set; }
 
-        // Mapeamento para "resource-name"
+        // Mapeamento "resource-name"
         [JsonProperty("resource-name")]
         public string ResourceName { get; set; }
 
-        // Mapeamento para "creation-datetime"
+        // Mapeamento "creation-datetime"
         [JsonProperty("creation-datetime")]
         public DateTime CreationDateTime { get; set; }
 
-        // O conteúdo em si
-        [JsonProperty("content")]
-        public string Content { get; set; }
+        // 'int' (1 ou 2).
+        [JsonProperty("evt")]
+        public int Evt { get; set; }
 
-        // Tipo de conteúdo
-        [JsonProperty("content-type")]
-        public string ContentType { get; set; }
+        // Endpoint (mqtt://... ou http://...)
+        [JsonProperty("endpoint")]
+        public string Endpoint { get; set; }
 
         // Ocultar chave estrangeira
         [JsonIgnore]
         public int ParentId { get; set; }
 
-        public ContentInstanceModel()
+        public SubscriptionModel()
         {
-            ResType = "content-instance";
+            ResType = "subscription";
             CreationDateTime = DateTime.Now;
         }
     }

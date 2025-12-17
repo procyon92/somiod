@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace SOMIOD.Models
+namespace ApplicationB.Models
 {
     public class NotificationModel
     {

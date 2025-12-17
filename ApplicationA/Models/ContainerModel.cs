@@ -1,29 +1,34 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace ApplicationA.Models
 {
     public class ContainerModel
     {
-        // Identificador interno (base de dados)
-        public int id { get; set; }
+        // Ocultar dados internos 
+        [JsonIgnore]
+        public int Id { get; set; }
 
-        // O enunciado exige "res-type" com o valor "container"
-        public string res_type { get; set; }
+        // Mapeamento correto para JSON com hífen
+        [JsonProperty("res-type")]
+        public string ResType { get; set; }
 
-        // O nome único do recurso dentro da aplicação pai
-        public string resource_name { get; set; }
+        // Mapeamento correto 
+        [JsonProperty("resource-name")]
+        public string ResourceName { get; set; }
 
-        // Data de criação obrigatória
-        public DateTime creation_datetime { get; set; }
+        // Mapeamento correto 
+        [JsonProperty("creation-datetime")]
+        public DateTime CreationDateTime { get; set; }
 
-        // Propriedade de navegação (útil para lógica interna)
-        public int parent_id { get; set; }
+        // Ocultar chaves estrangeiras/hierarquia do utilizador final
+        [JsonIgnore]
+        public int ParentId { get; set; }
 
         public ContainerModel()
         {
-            res_type = "container";
-            creation_datetime = DateTime.Now;
+            ResType = "container";
+            CreationDateTime = DateTime.Now;
         }
     }
 }
