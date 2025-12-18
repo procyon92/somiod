@@ -1,92 +1,126 @@
-﻿using System;
+﻿using ApplicationA.Models;
+using Newtonsoft.Json;
+using System;
 using System.Drawing;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using ApplicationA.Models; // Certifique-se que o namespace bate certo
 
 namespace ApplicationA
 {
     public partial class ApplicationA : Form
     {
-        // Cliente HTTP reutilizável
+        // Cliente HTTP reutilizável (Singleton para evitar exaustão de sockets)
         private static readonly HttpClient client = new HttpClient();
 
-        // Configurações do Cenário "Smart Parking"
-        private string appName = "smart-parking";
-        private string containerName = "piso-01";
+        // Constantes do Cenário "Smart Parking"
+        private const string APP_NAME = "smart-parking";
+        private const string CONTAINER_NAME = "piso-01";
 
         public ApplicationA()
         {
             InitializeComponent();
+            ConfigurarInterface();
+        }
 
-            // Configura o URL inicial
+        private void ConfigurarInterface()
+        {
             txtApiUrl.Text = "http://localhost:60000/api/somiod/";
 
-            // CORREÇÃO: Forçar os botões a começar DESATIVADOS
+            // Estado inicial: Desconectado
             btnEntrada.Enabled = false;
             btnSaida.Enabled = false;
-
-            // O botão de ligar deve começar ativo
             btnConnect.Enabled = true;
+            lblStatus.Text = "Desligado";
+            lblStatus.ForeColor = Color.Black;
         }
 
         // ========================================================
-        // 1. BOOTSTRAP: Cria a App e o Container se não existirem
+        // 1. BOOTSTRAP: Inicialização (Criar App e Container)
         // ========================================================
         private async void btnConnect_Click(object sender, EventArgs e)
         {
             string baseUrl = txtApiUrl.Text.Trim();
+            if (!baseUrl.EndsWith("/")) baseUrl += "/";
+
             btnConnect.Enabled = false;
+            Cursor = Cursors.WaitCursor;
 
             try
             {
-                // A. Verificar/Criar Aplicação
-                string appUrl = baseUrl + appName;
-                var responseApp = await client.GetAsync(appUrl);
+                // Garantir Aplicação
+                await GarantirRecurso(baseUrl, APP_NAME, "application");
 
-                if (!responseApp.IsSuccessStatusCode)
-                {
-                    var newApp = new ApplicationModel { resource_name = appName };
-                    string json = JsonConvert.SerializeObject(newApp);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                // Garantir Contentor (URL base + AppName)
+                string appUrl = baseUrl + APP_NAME;
+                await GarantirRecurso(appUrl, CONTAINER_NAME, "container");
 
-                    var res = await client.PostAsync(baseUrl, content);
-                    res.EnsureSuccessStatusCode();
-                }
-
-                // B. Verificar/Criar Contentor
-                string containerUrl = appUrl + "/" + containerName;
-                var responseCont = await client.GetAsync(containerUrl);
-
-                if (!responseCont.IsSuccessStatusCode)
-                {
-                    var newCont = new ContainerModel { resource_name = containerName };
-                    string json = JsonConvert.SerializeObject(newCont);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    var res = await client.PostAsync(appUrl, content);
-                    res.EnsureSuccessStatusCode();
-                }
-
-                MessageBox.Show($"Sensor ligado ao contentor '{containerName}' com sucesso!");
-                btnEntrada.Enabled = true;
-                btnSaida.Enabled = true;
-                lblStatus.Text = "Pronto a enviar dados.";
+                // Sucesso
+                MessageBox.Show($"Sensor ligado ao contentor '{CONTAINER_NAME}' com sucesso!", "Ligado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                AtivarControlos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao ligar: " + ex.Message);
+                MessageBox.Show($"Erro de conexão:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnConnect.Enabled = true;
             }
             finally
             {
-                btnConnect.Enabled = true;
+                Cursor = Cursors.Default;
+            }
+        }
+
+        private void AtivarControlos()
+        {
+            btnEntrada.Enabled = true;
+            btnSaida.Enabled = true;
+            lblStatus.Text = "Pronto.";
+            lblStatus.ForeColor = Color.Gray;
+        }
+
+        // Função Genérica para verificar e criar recursos
+        private async Task GarantirRecurso(string parentUrl, string resourceName, string type)
+        {
+            string targetUrl = $"{parentUrl}/{resourceName}";
+
+            // Tenta obter o recurso (GET)
+            var response = await client.GetAsync(targetUrl);
+
+            // Se não existir (404), cria (POST)
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                object payload;
+
+                // Cria o modelo com PascalCase (ResourceName), o [JsonProperty] trata do JSON
+                if (type == "application")
+                {
+                    payload = new ApplicationModel { ResourceName = resourceName, ResType = "application" };
+                }
+                else
+                {
+                    payload = new ContainerModel { ResourceName = resourceName, ResType = "container" };
+                }
+
+                string json = JsonConvert.SerializeObject(payload);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var createResponse = await client.PostAsync(parentUrl, content);
+
+                if (!createResponse.IsSuccessStatusCode)
+                {
+                    string error = await createResponse.Content.ReadAsStringAsync();
+                    throw new Exception($"Falha ao criar {type} '{resourceName}'.\nStatus: {createResponse.StatusCode}\n{error}");
+                }
+            }
+            else if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Erro ao verificar {type} '{resourceName}'. Status: {response.StatusCode}");
             }
         }
 
         // ========================================================
-        // 2. SIMULAR ENTRADA (OCUPADO)
+        // 2. SIMULAÇÃO: Envio de Dados (Sensor)
         // ========================================================
         private async void btnEntrar_Click(object sender, EventArgs e)
         {
@@ -95,9 +129,6 @@ namespace ApplicationA
             lblStatus.ForeColor = Color.Red;
         }
 
-        // ========================================================
-        // 3. SIMULAR SAÍDA (LIVRE)
-        // ========================================================
         private async void btnSair_Click(object sender, EventArgs e)
         {
             await EnviarEstado("free");
@@ -105,20 +136,23 @@ namespace ApplicationA
             lblStatus.ForeColor = Color.Green;
         }
 
-        // Função auxiliar para enviar o POST
-        private async System.Threading.Tasks.Task EnviarEstado(string status)
+        private async Task EnviarEstado(string status)
         {
             string baseUrl = txtApiUrl.Text.Trim();
-            string url = baseUrl + appName + "/" + containerName;
+            if (!baseUrl.EndsWith("/")) baseUrl += "/";
 
-            // Conteúdo XML obrigatório pelo requisito do projeto
+            // URL para criar dados: .../api/somiod/{appName}/{containerName}
+            string url = $"{baseUrl}{APP_NAME}/{CONTAINER_NAME}";
+
+            // Conteúdo XML (Validado pelo XSD na App B)
             string xmlContent = $"<parking><spot>A1</spot><status>{status}</status><time>{DateTime.Now:HH:mm:ss}</time></parking>";
 
             var data = new ContentInstanceModel
             {
-                resource_name = "sensor_" + DateTime.Now.Ticks,
-                content = xmlContent,
-                content_type = "application/xml"
+                ResType = "content-instance",           // Importante: identifica o tipo
+                ResourceName = "sensor_" + DateTime.Now.Ticks,
+                Content = xmlContent,
+                ContentType = "application/xml"
             };
 
             try
@@ -127,22 +161,21 @@ namespace ApplicationA
                 var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await client.PostAsync(url, httpContent);
-                response.EnsureSuccessStatusCode();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    string error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Erro API ({response.StatusCode}): {error}", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao enviar dados: " + ex.Message);
+                MessageBox.Show($"Falha de comunicação: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // Função vazia apenas para corrigir o erro do Designer
-        private void txtApiUrl_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void ApplicationA_Load(object sender, EventArgs e)
-        {
-
-        }
+        // Handlers do Designer
+        private void txtApiUrl_TextChanged(object sender, EventArgs e) { }
+        private void ApplicationA_Load(object sender, EventArgs e) { }
     }
 }

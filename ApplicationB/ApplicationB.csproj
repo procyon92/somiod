@@ -58,9 +58,8 @@
     <Compile Include="ApplicationB.Designer.cs">
       <DependentUpon>ApplicationB.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\ApplicationModel.cs" />
-    <Compile Include="Models\ContainerModel.cs" />
-    <Compile Include="Models\ContentInstance.cs" />
+    <Compile Include="Models\NotificationModel.cs" />
+    <Compile Include="Models\SubscriptionModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ApplicationB.resx">
@@ -76,8 +75,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="packages.config" />
-    <None Include="parking.xsd">
+    <None Include="Schemas\parking.xsd">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

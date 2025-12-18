@@ -1,23 +1,22 @@
 {
 	"info": {
-		"_postman_id": "b43c959d-6e3d-420d-b6f5-d1038c8e22b4",
-		"name": "SOMIOD",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "48943002",
-		"_collection_link": "https://andreclerigo-947538.postman.co/workspace/Andr%C3%A9-Cl%C3%A9rigo's-Workspace~f20cd7f8-beda-47a6-8f5f-cf31603f59bb/collection/48943002-b43c959d-6e3d-420d-b6f5-d1038c8e22b4?action=share&source=collection_link&creator=48943002"
+		"_postman_id": "somiod-final-project-test-suite",
+		"name": "SOMIOD Project Final Tests",
+		"description": "Coleção completa para validação do projeto SOMIOD 2024/2025. Inclui CRUD e Discovery para todos os recursos.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Application",
+			"name": "1. Application",
 			"item": [
 				{
-					"name": "Create APP",
+					"name": "Create Application",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"res_type\": \"application\",\r\n    \"resource_name\": \"MinhaPrimeiraApp\"\r\n}",
+							"raw": "{\n    \"res-type\": \"application\",\n    \"resource-name\": \"LightingApp\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -25,45 +24,32 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
+							"raw": "{{base_url}}/",
+							"host": ["{{base_url}}"],
+							"path": [""]
 						}
-					},
-					"response": []
+					}
 				},
 				{
 					"name": "Get Application",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp"
-							]
+							"raw": "{{base_url}}/LightingApp",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "Update App Name",
+					"name": "Update Application",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"res_type\": \"application\",\r\n    \"resource_name\": \"AppRenomeada\"\r\n}",
+							"raw": "{\n    \"res-type\": \"application\",\n    \"resource-name\": \"LightingAppRenamed\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -71,260 +57,26 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp"
-							]
+							"raw": "{{base_url}}/LightingApp",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "Delete App",
+					"name": "Delete Application",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/AppRenomeada",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"AppRenomeada"
-							]
+							"raw": "{{base_url}}/LightingAppRenamed",
+							"host": ["{{base_url}}"],
+							"path": ["LightingAppRenamed"]
 						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Container",
-			"item": [
-				{
-					"name": "Create Container",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"res_type\": \"container\",\r\n    \"resource_name\": \"DadosSensores\"\r\n}"
-						},
-						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp"
-							]
-						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "Get Container",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "Update Container",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"res_type\": \"container\",\r\n    \"resource_name\": \"SensoresV2\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp",
-								"DadosSensores"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Container",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Content Instance",
-			"item": [
-				{
-					"name": "Create Content Instance",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"res_type\": \"content-instance\",\r\n    \"content\": \"25 graus\",\r\n    \"content_type\": \"text/plain\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp",
-								"DadosSensores"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Content Instance",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/{{res_name}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp",
-								"DadosSensores",
-								"{{res_name}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Content Instance",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/{{res_name}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp",
-								"DadosSensores",
-								"{{res_name}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Subscription",
-			"item": [
-				{
-					"name": "Create Subscription",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"res_type\": \"subscription\",\r\n    \"resource_name\": \"SubMinhaApp\",\r\n    \"evt\": \"1\",\r\n    \"endpoint\": \"http://localhost:5000/api/notificacoes\" \r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/subs",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp",
-								"DadosSensores",
-								"subs"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Subscription",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/subs/SubMinhaApp",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp",
-								"DadosSensores",
-								"subs",
-								"SubMinhaApp"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Subscription",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/MinhaPrimeiraApp/DadosSensores/subs/SubMinhaApp",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"MinhaPrimeiraApp",
-								"DadosSensores",
-								"subs",
-								"SubMinhaApp"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "somiod discovery",
-			"item": [
-				{
-					"name": "Get All Apps",
+					"name": "Discovery: All Applications",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -335,69 +87,267 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
+							"raw": "{{base_url}}/",
+							"host": ["{{base_url}}"],
+							"path": [""]
 						}
-					},
-					"response": []
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Container",
+			"item": [
+				{
+					"name": "Create Container",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"res-type\": \"container\",\n    \"resource-name\": \"LightBulbCont\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/LightingApp",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp"]
+						}
+					}
 				},
 				{
-					"name": "Get All Containers",
+					"name": "Get Container",
 					"request": {
 						"method": "GET",
-						"header": []
-					},
-					"response": []
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont"]
+						}
+					}
 				},
 				{
-					"name": "Get All Content Instances",
+					"name": "Update Container",
 					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"res-type\": \"container\",\n    \"resource-name\": \"LightBulbContV2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont"]
+						}
+					}
 				},
 				{
-					"name": "Get All Subscriptions",
+					"name": "Delete Container",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbContV2",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbContV2"]
+						}
+					}
+				},
+				{
+					"name": "Discovery: Containers in App",
 					"request": {
 						"method": "GET",
-						"header": []
-					},
-					"response": []
+						"header": [
+							{
+								"key": "somiod-discovery",
+								"value": "container",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/LightingApp",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Content Instance",
+			"item": [
+				{
+					"name": "Create Data (XML)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"res-type\": \"content-instance\",\n    \"resource-name\": \"Data1\",\n    \"content\": \"<cmd>ON</cmd>\",\n    \"content-type\": \"application/xml\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont"]
+						}
+					}
+				},
+				{
+					"name": "Get Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont/Data1",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont", "Data1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont/Data1",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont", "Data1"]
+						}
+					}
+				},
+				{
+					"name": "Discovery: Data in Container",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "somiod-discovery",
+								"value": "content-instance",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Subscription",
+			"item": [
+				{
+					"name": "Create Subscription (MQTT)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"res-type\": \"subscription\",\n    \"resource-name\": \"SubMqtt\",\n    \"evt\": \"1\",\n    \"endpoint\": \"mqtt://127.0.0.1:1883\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont/subs",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont", "subs"]
+						}
+					}
+				},
+				{
+					"name": "Get Subscription",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont/subs/SubMqtt",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont", "subs", "SubMqtt"]
+						}
+					}
+				},
+				{
+					"name": "Delete Subscription",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont/subs/SubMqtt",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont", "subs", "SubMqtt"]
+						}
+					}
+				},
+				{
+					"name": "Discovery: Subs in Container",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "somiod-discovery",
+								"value": "subscription",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/LightingApp/LightBulbCont",
+							"host": ["{{base_url}}"],
+							"path": ["LightingApp", "LightBulbCont"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. System Discovery",
+			"item": [
+				{
+					"name": "Get ALL Subscriptions (Root)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "somiod-discovery",
+								"value": "subscription",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": ["{{base_url}}"],
+							"path": [""]
+						}
+					}
 				}
 			]
 		}
 	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
 	"variable": [
 		{
-			"key": "url",
-			"value": ""
+			"key": "base_url",
+			"value": "http://localhost:5000/api/somiod"
 		}
 	]
 }

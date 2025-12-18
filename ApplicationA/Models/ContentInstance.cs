@@ -1,42 +1,42 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace ApplicationA.Models
 {
     public class ContentInstanceModel
     {
-        // ID interno da Base de Dados
-        public int id { get; set; }
+        // Ocultar ID interno 
+        [JsonIgnore]
+        public int Id { get; set; }
 
-        // Nota: Em C# não podemos usar hífen no nome da variável como "content-type", por exemplo  
-        // por isso resolvemos usar JsonProperty para mapear corretamente.
-
-        // Deve ser sempre "content-instance" 
+        // Mapeamento para "res-type"
         [JsonProperty("res-type")]
-        public string res_type { get; set; }
+        public string ResType { get; set; }
 
-        // Nome único dentro do contentor pai
+        // Mapeamento para "resource-name"
         [JsonProperty("resource-name")]
-        public string resource_name { get; set; }
+        public string ResourceName { get; set; }
 
-        // Data de criação
+        // Mapeamento para "creation-datetime"
         [JsonProperty("creation-datetime")]
-        public DateTime creation_datetime { get; set; }
+        public DateTime CreationDateTime { get; set; }
 
-        // O conteúdo em si (pode ser XML, JSON ou texto simples) 
-        public string content { get; set; }
+        // O conteúdo em si
+        [JsonProperty("content")]
+        public string Content { get; set; }
 
-        // O tipo de conteúdo (ex: "application/json", "application/xml") 
+        // Tipo de conteúdo
         [JsonProperty("content-type")]
-        public string content_type { get; set; }
+        public string ContentType { get; set; }
 
-        // ID do Contentor a que este dado pertence
-        public int parent_id { get; set; }
+        // Ocultar chave estrangeira
+        [JsonIgnore]
+        public int ParentId { get; set; }
 
         public ContentInstanceModel()
         {
-            res_type = "content-instance";
-            creation_datetime = DateTime.Now;
+            ResType = "content-instance";
+            CreationDateTime = DateTime.Now;
         }
     }
 }
